@@ -41,8 +41,15 @@ class SearchTableViewController: UITableViewController {
         print(country)
         let vc = AddCityWeatherViewController()
         vc.cityName = country
+        Task{
+            vc.currentWeatherData = try await vc.weatherDataClient.CurrentWeatherData(city:country)
+            vc.forcastWeatherData = try await vc.weatherDataClient.ForecastWeatherData(city: country)
+            vc.forecastRow = vc.forcastWeatherData!.list
+            vc.mainCollectionView.reloadData()
+            let addWeatherNC = UINavigationController(rootViewController: vc)
+            present(addWeatherNC, animated: true, completion: nil)
+        }
         
-        let addWeatherNC = UINavigationController(rootViewController: vc)
-        present(addWeatherNC, animated: true, completion: nil)
+
     }
 }

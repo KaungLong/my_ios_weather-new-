@@ -8,9 +8,18 @@
 import Foundation
 import UIKit
 
+protocol SaveWeatherDelegate:AnyObject{
+    func saveWeather(weatherData:CurrentWeather)
+}
+
 class AddCityWeatherViewController: UIViewController {
     
     var cityName:String = ""
+    var weatherDataClient = WeatherDataHTTPClient()
+    var currentWeatherData: CurrentWeather?
+    var forcastWeatherData: ForecastWeather?
+    var forecastRow = [ForecastWeather.List]()
+    var delegate: SaveWeatherDelegate?
     
     let mainCollectionView:UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -24,9 +33,10 @@ class AddCityWeatherViewController: UIViewController {
         collectionView.backgroundColor = .brown
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         print("coll")
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.identifier)
-//        collectionView.register(MainHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainHeaderCollectionReusableView.identifier)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "mycell")
+        collectionView.register(ForecastCollectionViewCell.self, forCellWithReuseIdentifier: ForecastCollectionViewCell.identifier)
+        collectionView.register(CurrentCollectionViewCell.self, forCellWithReuseIdentifier: CurrentCollectionViewCell.identifier)
+        collectionView.register(MainHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainHeaderCollectionReusableView.identifier)
         return collectionView
     }()
     
@@ -39,10 +49,17 @@ class AddCityWeatherViewController: UIViewController {
         
         self.view.addSubview(mainCollectionView)
         setupConstraints()
-        delegate()
+        setupDelegate()
+        
+//        Task{
+//            currentWeatherData = try await weatherDataClient.CurrentWeatherData(city:cityName)
+//            forcastWeatherData = try await weatherDataClient.ForecastWeatherData(city: cityName)
+//            forecastRow = forcastWeatherData!.list
+//            self.mainCollectionView.reloadData()
+//        }
     }
     
-    func delegate(){
+    func setupDelegate() {
         mainCollectionView.dataSource = self
         mainCollectionView.delegate = self
     }
@@ -65,14 +82,39 @@ class AddCityWeatherViewController: UIViewController {
         mainCollectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -6).isActive = true
     }
     
+    func showCurrentWeatherInfo(cell: CurrentCollectionViewCell) {
+        if let weatherIcon = self.currentWeatherData?.weather.first?.icon,
+           let weatherDesc = self.currentWeatherData?.weather.first?.description,
+           let cityName = self.currentWeatherData?.name,
+           let date = self.currentWeatherData?.dt,
+           let localTime = self.currentWeatherData?.dt,
+           let temp = self.currentWeatherData?.main.temp,
+           let tempFeel = self.currentWeatherData?.main.feelsLike,
+           let hum = self.currentWeatherData?.main.humidity,
+           let wind = self.currentWeatherData?.wind.speed,
+           let temp_Min = self.currentWeatherData?.main.temp_min,
+           let temp_Max = self.currentWeatherData?.main.temp_max,
+           let suffix =  self.currentWeatherData?.weather.first?.icon.suffix(1)
+            {
+//            DispatchQueue.main.async {
+                cell.locationLabel.text = cityName.capitalized
+                cell.tempLabel.text = "\(WeatherDataHTTPClient.tempFormate(temp))º"
+                cell.temp_MaxMin.text = "H:\(temp_Max) L:\(temp_Min)"
+                cell.destributionLabel.text = weatherDesc
+                cell.WeatherImageView.image = UIImage(named: weatherIcon)
+                print("gg+\(weatherIcon)")
+//            }
+
+        }
+    }
+    
     @objc func cancelButton(){
         self.dismiss(animated: true)
     }
     @objc func saveButton(){
-//        delegate?.saveWeather(weatherData: weatherInfo!)
-//        print("BB")
-//        //        dismiss(animated: true)
-//        view.window?.rootViewController?.dismiss(animated: true)
+        delegate?.saveWeather(weatherData: currentWeatherData!)
+
+        view.window?.rootViewController?.dismiss(animated: true)
 //        WeatherStore.shared.updateAPI()
     }
     
@@ -86,13 +128,51 @@ extension AddCityWeatherViewController: UICollectionViewDataSource {
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return HomeSection.allCases.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.identifier, for: indexPath) as? MainCollectionViewCell else { return UICollectionViewCell() }
-
-        return myCell
+        
+        guard let homeSection = HomeSection(rawValue: indexPath.section) else {return UICollectionViewCell()}
+        
+        switch homeSection {
+        case.Current:
+            guard let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: CurrentCollectionViewCell.identifier, for: indexPath) as? CurrentCollectionViewCell else { return UICollectionViewCell() }
+            showCurrentWeatherInfo(cell: myCell)
+            return myCell
+        case.Forecast:
+            guard let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: ForecastCollectionViewCell.identifier, for: indexPath) as? ForecastCollectionViewCell else { return UICollectionViewCell() }
+            myCell.forecastWeatherData = forcastWeatherData
+            myCell.forecastRow = forecastRow
+            return myCell
+        case.test1:
+            let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "mycell", for: indexPath) as UICollectionViewCell
+            myCell.backgroundColor = .gray
+            return myCell
+        case .test2:
+            let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "mycell", for: indexPath) as UICollectionViewCell
+            myCell.backgroundColor = .orange
+            return myCell
+        }
+    }
+    //header的cell
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainHeaderCollectionReusableView.identifier, for: indexPath) as! MainHeaderCollectionReusableView
+        
+        guard let homeSection = HomeSection(rawValue: indexPath.section) else {return UICollectionReusableView()}
+        
+        switch homeSection {
+            case .Current:
+                header.headerLabel.text = ""
+            case .Forecast:
+                header.headerLabel.text = "未來天氣預報"
+            case .test1:
+                header.headerLabel.text = "標題1"
+            case .test2:
+                header.headerLabel.text = "標題2"
+        }
+        
+        return header
     }
 }
 
@@ -103,8 +183,43 @@ extension AddCityWeatherViewController: UICollectionViewDelegateFlowLayout{
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        return CGSize(width: self.mainCollectionView.frame.width, height: 300)
-
+        guard let homeSection = HomeSection(rawValue: indexPath.section) else {return CGSize.zero}
+        switch homeSection {
+        case .Current:
+            return CGSize(width: self.view.frame.width, height: 312)
+        case.Forecast:
+            return CGSize(width: self.view.frame.width, height: 200)
+        case .test1:
+            return CGSize(width: self.view.frame.width, height: 900)
+        case .test2:
+            return CGSize(width: self.view.frame.width, height: 900)
+        }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        guard let homeSection = HomeSection(rawValue: section) else {return CGSize.zero}
+        switch homeSection {
+        case .Current:
+            return CGSize.zero
+        case .Forecast:
+            return CGSize(width: self.view.frame.width, height: 26)
+        case .test1:
+            return CGSize(width: self.view.frame.width/2-100 , height: 26)
+        case .test2:
+            return CGSize(width: self.view.frame.width/2-100 , height: 26)
+//        case .buttom:
+//            return CGSize.zero
+//        default:
+//            return CGSize(width: (frame.width-50)/2, height: 20)
+        }
+//        return CGSize(width: frame.width, height: 20)
+    }
+}
+
+//MARK: - Collection section enum
+extension AddCityWeatherViewController {
+    enum HomeSection:Int, CaseIterable{
+        case Current = 0,Forecast, test1,test2 //descript, buttom
+    }
+
 }
