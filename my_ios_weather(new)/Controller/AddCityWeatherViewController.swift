@@ -24,7 +24,8 @@ class AddCityWeatherViewController: UIViewController {
         collectionView.backgroundColor = .brown
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         print("coll")
-//        collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.identifier)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.identifier)
 //        collectionView.register(MainHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MainHeaderCollectionReusableView.identifier)
         return collectionView
     }()
@@ -38,7 +39,12 @@ class AddCityWeatherViewController: UIViewController {
         
         self.view.addSubview(mainCollectionView)
         setupConstraints()
-//        delegate()
+        delegate()
+    }
+    
+    func delegate(){
+        mainCollectionView.dataSource = self
+        mainCollectionView.delegate = self
     }
     
     func setupNavigation(){
@@ -70,4 +76,35 @@ class AddCityWeatherViewController: UIViewController {
 //        WeatherStore.shared.updateAPI()
     }
     
+}
+
+//MARK: UICollectionViewDataSource
+extension AddCityWeatherViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.identifier, for: indexPath) as? MainCollectionViewCell else { return UICollectionViewCell() }
+
+        return myCell
+    }
+}
+
+extension AddCityWeatherViewController: UICollectionViewDelegateFlowLayout{
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 4, bottom: 16, right: 4)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        return CGSize(width: self.mainCollectionView.frame.width, height: 300)
+
+    }
 }
