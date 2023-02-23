@@ -9,6 +9,7 @@ import UIKit
 
 class MainViewController: UIViewController {
     
+    
     var countryDataClient = CountryDataHTTPClient()
 //    var countries: [Country] = []
 //    var countrys = [String]()
@@ -17,7 +18,7 @@ class MainViewController: UIViewController {
     //MARK: - UI
     let mainTableView:UITableView = {
         let mainTableView = UITableView(frame: .zero, style: .insetGrouped)
-        //        mainTableView.register(MainTableViewCell.self, forCellReuseIdentifier: "cell")
+        mainTableView.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.identifier)
         return mainTableView
     }()
     
@@ -32,23 +33,29 @@ class MainViewController: UIViewController {
     //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .gray
-        
+        view.backgroundColor = .white
+        setupUI()
+        delegate()
+        setupNavigation()
+   
         Task{
             try await countryDataClient.getCountryData()
             print(countryDataClient.countrys[0])
         }
         
-        
-        
-        //        setupLoaction()
-        //        view.backgroundColor = .white
-        //        delegate()
-        ////        location()
-        setupNavigation()
-        //        setupUI()
-        //        allCountry.getCountry()
-        
+    }
+    
+    func delegate(){
+        mainTableView.dataSource = self
+        mainTableView.delegate = self
+        searchTableViewController.delegate = self
+    }
+    
+    private func setupUI(){
+        view.addSubview(mainTableView)
+        mainTableView.addSubview(refreshControl)
+        mainTableView.frame = view.bounds
+        mainTableView.backgroundColor = .systemBrown
     }
     
     private func setupNavigation(){
@@ -104,5 +111,75 @@ extension MainViewController: UISearchResultsUpdating {
         print("over")
     }
 
+}
 
+extension MainViewController: UITableViewDataSource{
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as? MainTableViewCell else {return UITableViewCell()}
+        let currentWeather = WeatherStore.shared.weathers[indexPath.section]
+        cell.locationLabel.text = currentWeather.name
+        cell.timeLabel.text = currentWeather.dt.time(format: "HH:mm")
+        cell.destributionLabel.text = currentWeather.weather[indexPath.row].description
+        cell.tempLabel.text = "\(WeatherDataHTTPClient.tempFormate(currentWeather.main.temp))"
+        //String(lround(currentWeather.main.temp))
+        cell.temp_MaxMin.text = "H: \(WeatherDataHTTPClient.tempFormate(currentWeather.main.temp_max))   L: \(WeatherDataHTTPClient.tempFormate(currentWeather.main.temp_min))"
+        cell.layer.borderWidth = 1
+        cell.backgroundColor = .white
+        return cell
+    }
+    
+}
+
+extension MainViewController:UITableViewDelegate{
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .clear
+        return headerView
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return WeatherStore.shared.weathers.count
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = MainPageViewController()
+        vc.initialPage = indexPath.section
+        let mainPageNav = UINavigationController(rootViewController: vc)
+        mainPageNav.navigationBar.isHidden = true
+        mainPageNav.modalPresentationStyle = .fullScreen
+        present(mainPageNav, animated: true)
+        tableView.deselectRow(at: indexPath, animated: false)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (indexPath.section+1) != 0{
+            if editingStyle == .delete {
+                WeatherStore.shared.remove(indexPath.section)
+                print("\(indexPath.section)+所刪除行數")
+                mainTableView.reloadData()
+            }
+        }
+    }
+}
+//MARK: - SaveWeatherDelegate
+extension MainViewController:SaveWeatherDelegate{
+    func saveWeather(weatherData: CurrentWeather) {
+        print("CCCCCC")
+        WeatherStore.shared.append(weatherData)
+        DispatchQueue.main.async {
+            self.mainTableView.reloadData()
+        }
+    }
 }

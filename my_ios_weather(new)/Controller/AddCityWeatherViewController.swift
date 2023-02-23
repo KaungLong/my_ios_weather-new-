@@ -15,7 +15,7 @@ protocol SaveWeatherDelegate:AnyObject{
 class AddCityWeatherViewController: UIViewController {
     
     var cityName:String = ""
-    var weatherDataClient = WeatherDataHTTPClient()
+//    var weatherDataClient = WeatherDataHTTPClient()
     var currentWeatherData: CurrentWeather?
     var forcastWeatherData: ForecastWeather?
     var forecastRow = [ForecastWeather.List]()
@@ -113,9 +113,9 @@ class AddCityWeatherViewController: UIViewController {
     }
     @objc func saveButton(){
         delegate?.saveWeather(weatherData: currentWeatherData!)
-
+        
         view.window?.rootViewController?.dismiss(animated: true)
-//        WeatherStore.shared.updateAPI()
+        WeatherStore.shared.updateAPI()
     }
     
 }

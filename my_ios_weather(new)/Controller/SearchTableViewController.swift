@@ -6,12 +6,15 @@
 //
 
 import Foundation
-
 import UIKit
+
+
 
 class SearchTableViewController: UITableViewController {
 
     var countries = [String]()
+    var delegate:SaveWeatherDelegate?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,14 +45,15 @@ class SearchTableViewController: UITableViewController {
         let vc = AddCityWeatherViewController()
         vc.cityName = country
         Task{
-            vc.currentWeatherData = try await vc.weatherDataClient.CurrentWeatherData(city:country)
-            vc.forcastWeatherData = try await vc.weatherDataClient.ForecastWeatherData(city: country)
+            vc.currentWeatherData = try await WeatherDataHTTPClient.CurrentWeatherData(city:country)
+            vc.forcastWeatherData = try await WeatherDataHTTPClient.ForecastWeatherData(city: country)
             vc.forecastRow = vc.forcastWeatherData!.list
             vc.mainCollectionView.reloadData()
+            
             let addWeatherNC = UINavigationController(rootViewController: vc)
             present(addWeatherNC, animated: true, completion: nil)
         }
+        vc.delegate = self.delegate
         
-
     }
 }

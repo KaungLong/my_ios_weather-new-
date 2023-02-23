@@ -53,7 +53,7 @@ class CountryDataHTTPClient {
 
 class WeatherDataHTTPClient {
     
-    func ForecastWeatherData(city:String) async throws -> ForecastWeather {
+    static func ForecastWeatherData(city:String) async throws -> ForecastWeather {
         let forecastURLstr = "https://api.openweathermap.org/data/2.5/\(API.forecast)?q=\(city)&appid=\(API.apiKey)&units=\(API.imperial)&lang=zh_tw"
         
         let (data, response) = try await URLSession.shared.data(from: URL(string: forecastURLstr)!)
@@ -69,7 +69,7 @@ class WeatherDataHTTPClient {
         return forcastWeatherData
     }
     
-    func CurrentWeatherData(city:String) async throws -> CurrentWeather {
+    static func CurrentWeatherData(city:String) async throws -> CurrentWeather {
         let currentURLstr = "https://api.openweathermap.org/data/2.5/\(API.weather)?q=\(city)&appid=\(API.apiKey)&units=\(API.imperial)&lang=zh_tw"
         let (data, response) = try await URLSession.shared.data(from: URL(string: currentURLstr)!)
         guard let httpResponse = response as? HTTPURLResponse,
