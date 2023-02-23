@@ -44,27 +44,22 @@ class MainPageViewController: UIPageViewController {
     }
     
     func setupPages(){
-        Task {
+    
             for index in 0..<WeatherStore.shared.weathers.count{
                 let vc = AddCityWeatherViewController()
                 let city = WeatherStore.shared.weathers[index].name
-                
-                let addCityCurrentWeather = try await WeatherDataHTTPClient.CurrentWeatherData(city: city )
-                let addCityForcastWeather = try await WeatherDataHTTPClient.ForecastWeatherData(city: city)
-                DispatchQueue.main.async {
-                    vc.currentWeatherData = addCityCurrentWeather
-                    vc.forcastWeatherData = addCityForcastWeather
-                    vc.forecastRow = addCityForcastWeather.list
-                    vc.cityName = addCityCurrentWeather.name
-                    //            self.mainCollectionView.reloadData()
+                Task{
+                    vc.currentWeatherData = try await WeatherDataHTTPClient.CurrentWeatherData(city:city)
+                    vc.forcastWeatherData = try await WeatherDataHTTPClient.ForecastWeatherData(city: city)
+                    vc.forecastRow = vc.forcastWeatherData!.list
                     vc.mainCollectionView.reloadData()
-                    print("\(addCityCurrentWeather.name)+測試")
-                    self.pages.append(vc)
-                    
+                    print("\(city)+GGDOG")
                 }
+                self.pages.append(vc)
             }
+            
             setViewControllers([pages[initialPage!]], direction: .forward, animated: false, completion: nil)
-        }
+        
     }
     
     func setupToolBar(){
