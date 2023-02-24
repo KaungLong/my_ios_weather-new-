@@ -13,6 +13,7 @@ class MainPageViewController: UIPageViewController {
     
     var initialPage:Int?
     var pages = [UIViewController]()
+    var CityWeatherViewControllerArr: [UIViewController] = []
     
     //MARK: - UI
     lazy var pageControl:UIPageControl = {
@@ -48,18 +49,31 @@ class MainPageViewController: UIPageViewController {
             for index in 0..<WeatherStore.shared.weathers.count{
                 let vc = AddCityWeatherViewController()
                 let city = WeatherStore.shared.weathers[index].name
-                Task{
+                
+                self.CityWeatherViewControllerArr.append(vc)
+
+                    print("\(city)+GGDOG")
+                Task {
                     vc.currentWeatherData = try await WeatherDataHTTPClient.CurrentWeatherData(city:city)
+                    DispatchQueue.main.async {
+                        vc.mainCollectionView.reloadSections([0])
+                    }
+                }
+                Task {
                     vc.forcastWeatherData = try await WeatherDataHTTPClient.ForecastWeatherData(city: city)
                     vc.forecastRow = vc.forcastWeatherData!.list
-                    vc.mainCollectionView.reloadData()
-                    print("\(city)+GGDOG")
+                    DispatchQueue.main.async {
+                        vc.mainCollectionView.reloadSections([1])
+                    }
                 }
-                self.pages.append(vc)
+                
             }
-            
-            setViewControllers([pages[initialPage!]], direction: .forward, animated: false, completion: nil)
         
+            
+        
+        
+        
+            setViewControllers([pages[initialPage!]], direction: .forward, animated: false, completion: nil)
     }
     
     func setupToolBar(){
