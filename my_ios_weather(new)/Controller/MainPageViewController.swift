@@ -38,7 +38,8 @@ class MainPageViewController: UIPageViewController {
     //MARK: - lifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        dataSource = self
+        delegate = self
         setupPages()
         setupToolBar()
         pageControl.currentPage = initialPage!
