@@ -44,15 +44,17 @@ class SearchTableViewController: UITableViewController {
         print(country)
         let vc = AddCityWeatherViewController()
         vc.cityName = country
-        Task{
-            vc.currentWeatherData = try await WeatherDataHTTPClient.CurrentWeatherData(city:country)
-            vc.forcastWeatherData = try await WeatherDataHTTPClient.ForecastWeatherData(city: country)
-            vc.forecastRow = vc.forcastWeatherData!.list
-            vc.mainCollectionView.reloadData()
-            
-            let addWeatherNC = UINavigationController(rootViewController: vc)
-            present(addWeatherNC, animated: true, completion: nil)
-        }
+        let addWeatherNC = UINavigationController(rootViewController: vc)
+        present(addWeatherNC, animated: true, completion: nil)
+//        Task{
+//            vc.currentWeatherData = try await WeatherDataHTTPClient.CurrentWeatherData(city:country)
+//            vc.forcastWeatherData = try await WeatherDataHTTPClient.ForecastWeatherData(city: country)
+//            vc.forecastRow = vc.forcastWeatherData!.list
+//            vc.mainCollectionView.reloadData()
+//
+//            let addWeatherNC = UINavigationController(rootViewController: vc)
+//            present(addWeatherNC, animated: true, completion: nil)
+//        }
         vc.delegate = self.delegate
         
     }

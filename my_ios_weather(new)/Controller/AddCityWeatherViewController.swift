@@ -15,7 +15,6 @@ protocol SaveWeatherDelegate:AnyObject{
 class AddCityWeatherViewController: UIViewController {
     
     var cityName:String = ""
-//    var weatherDataClient = WeatherDataHTTPClient()
     var currentWeatherData: CurrentWeather?
     var forcastWeatherData: ForecastWeather?
     var forecastRow = [ForecastWeather.List]()
@@ -51,12 +50,15 @@ class AddCityWeatherViewController: UIViewController {
         setupConstraints()
         setupDelegate()
         
-//        Task{
-//            currentWeatherData = try await weatherDataClient.CurrentWeatherData(city:cityName)
-//            forcastWeatherData = try await weatherDataClient.ForecastWeatherData(city: cityName)
-//            forecastRow = forcastWeatherData!.list
-//            self.mainCollectionView.reloadData()
-//        }
+        Task{
+            currentWeatherData = try await WeatherDataHTTPClient.CurrentWeatherData(city:cityName)
+            self.mainCollectionView.reloadSections([0])
+        }
+        Task {
+            forcastWeatherData = try await WeatherDataHTTPClient.ForecastWeatherData(city: cityName)
+            forecastRow = forcastWeatherData!.list
+            self.mainCollectionView.reloadSections([1])
+        }
     }
     
     func setupDelegate() {
