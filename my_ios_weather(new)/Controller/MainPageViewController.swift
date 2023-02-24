@@ -82,11 +82,6 @@ class MainPageViewController: UIPageViewController {
         print(pageControl.currentPage)
     }
     
-//    func setPageViewController(page:Int){
-//        guard let VC = setup
-//
-//    }
-//
 }
 
 extension MainPageViewController:UIPageViewControllerDataSource{
