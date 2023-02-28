@@ -7,7 +7,7 @@ Hello, I'm KaungLong, an IOS Developer. This project is my second attempt to mak
 ## Features structure
 ---
 - MVC structure
-- Signleton
+- Signleton Pattern
 - UITableView and UICollectionView skills
 - UIPageView and PageViewControl
 - Consume JSON from third-party applications
