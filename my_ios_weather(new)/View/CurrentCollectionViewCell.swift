@@ -23,7 +23,7 @@ class CurrentCollectionViewCell: UICollectionViewCell {
         let weatherimage = UIImageView()
         weatherimage.frame.size.width = 150
         weatherimage.frame.size.height = 150
-        weatherimage.backgroundColor = .systemPink
+        weatherimage.backgroundColor = .gray
         weatherimage.image = UIImage(systemName: "network")
         weatherimage.translatesAutoresizingMaskIntoConstraints   = false
         weatherimage.contentMode = .scaleAspectFit
@@ -38,7 +38,7 @@ class CurrentCollectionViewCell: UICollectionViewCell {
 //        stackView.backgroundColor = .blue
         stackView.setCustomSpacing(4, after: destributionLabel)
         stackView.spacing = 8
-        stackView.backgroundColor = .purple
+        stackView.backgroundColor = .gray
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -74,9 +74,8 @@ class CurrentCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .cyan
+        backgroundColor = .gray
         layer.cornerRadius = 20
-//        delegate()
         CurrentSetupConstraints()
     }
     

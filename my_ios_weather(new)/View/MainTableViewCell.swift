@@ -72,7 +72,7 @@ class MainTableViewCell: UITableViewCell {
         self.addSubview(leftStackView)
         self.addSubview(rightStackView)
         
-        leftStackView.backgroundColor = .systemPink
+        leftStackView.backgroundColor = .gray
         leftStackView.translatesAutoresizingMaskIntoConstraints = false
         leftStackView.axis = .vertical
         leftStackView.setCustomSpacing(24, after: timeLabel)
@@ -80,7 +80,7 @@ class MainTableViewCell: UITableViewCell {
         rightStackView.axis = .vertical
         rightStackView.alignment = .center
         rightStackView.spacing = 26
-        rightStackView.backgroundColor = .brown
+        rightStackView.backgroundColor = .gray
         rightStackView.translatesAutoresizingMaskIntoConstraints = false
 
         leftStackView.topAnchor.constraint(equalTo: self.topAnchor,constant: 8).isActive = true

@@ -29,7 +29,7 @@ class AddCityWeatherViewController: UIViewController {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
-        collectionView.backgroundColor = .brown
+        collectionView.backgroundColor = .systemBackground
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         print("coll")
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "mycell")
@@ -42,7 +42,7 @@ class AddCityWeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .secondarySystemGroupedBackground
+        view.backgroundColor = .systemBackground
         view.overrideUserInterfaceStyle = .dark
         setupNavigation()
         
@@ -149,11 +149,11 @@ extension AddCityWeatherViewController: UICollectionViewDataSource {
             return myCell
         case.test1:
             let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "mycell", for: indexPath) as UICollectionViewCell
-            myCell.backgroundColor = .gray
+            myCell.backgroundColor = .darkGray
             return myCell
         case .test2:
             let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "mycell", for: indexPath) as UICollectionViewCell
-            myCell.backgroundColor = .orange
+            myCell.backgroundColor = .lightGray
             return myCell
         }
     }

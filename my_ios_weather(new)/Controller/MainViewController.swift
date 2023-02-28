@@ -26,7 +26,7 @@ class MainViewController: UIViewController {
         let refreshControl = UIRefreshControl()
         refreshControl.translatesAutoresizingMaskIntoConstraints = true
         refreshControl.tintColor = .gray
-        refreshControl.backgroundColor = .black
+        refreshControl.backgroundColor = .white
         return refreshControl
     }()
     
@@ -55,7 +55,7 @@ class MainViewController: UIViewController {
         view.addSubview(mainTableView)
         mainTableView.addSubview(refreshControl)
         mainTableView.frame = view.bounds
-        mainTableView.backgroundColor = .systemBrown
+        mainTableView.backgroundColor = .systemBackground
     }
     
     private func setupNavigation(){
@@ -128,7 +128,7 @@ extension MainViewController: UITableViewDataSource{
         //String(lround(currentWeather.main.temp))
         cell.temp_MaxMin.text = "H: \(WeatherDataHTTPClient.tempFormate(currentWeather.main.temp_max))   L: \(WeatherDataHTTPClient.tempFormate(currentWeather.main.temp_min))"
         cell.layer.borderWidth = 1
-        cell.backgroundColor = .white
+        cell.backgroundColor = .gray
         return cell
     }
     

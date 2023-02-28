@@ -41,7 +41,7 @@ class HourlyForecastCollectionViewCell: UICollectionViewCell {
     
     let WeatherImageView:UIImageView = {
         let weatherimage = UIImageView()
-        weatherimage.backgroundColor = .systemPink
+//        weatherimage.backgroundColor = .gray
         weatherimage.image = UIImage(systemName: "network")
         weatherimage.translatesAutoresizingMaskIntoConstraints   = false
 //        weatherimage.frame.size.width = 70
@@ -53,7 +53,7 @@ class HourlyForecastCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.brown
+//        backgroundColor = UIColor.brown
         setupViews()
     }
     
@@ -93,14 +93,14 @@ class HourlyForecastCollectionViewCell: UICollectionViewCell {
         
         cellView.addSubview(TopStackView)
         cellView.addSubview(BottomStackView)
-        TopStackView.backgroundColor = .systemPink
+//        TopStackView.backgroundColor = .gray
         TopStackView.translatesAutoresizingMaskIntoConstraints = false
         TopStackView.axis = .horizontal
         TopStackView.setCustomSpacing(2, after: timeLabel)
         BottomStackView.axis = .horizontal
         BottomStackView.alignment = .center
         BottomStackView.spacing = 2
-        BottomStackView.backgroundColor = .brown
+//        BottomStackView.backgroundColor = .gray
         BottomStackView.translatesAutoresizingMaskIntoConstraints = false
 
         TopStackView.topAnchor.constraint(equalTo: self.topAnchor,constant: 2).isActive = true

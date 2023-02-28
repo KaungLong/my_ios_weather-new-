@@ -29,7 +29,7 @@ class MainHeaderCollectionReusableView: UICollectionReusableView {
     }
     
     func configure(){
-        backgroundColor = .systemGreen
+        backgroundColor = .gray
         addSubview(headerLabel)
     }
 

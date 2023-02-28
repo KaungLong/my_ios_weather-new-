@@ -26,7 +26,7 @@ class ForecastCollectionViewCell: UICollectionViewCell {
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 50, height: 100)
         let hourlyForecastCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        hourlyForecastCollectionView.backgroundColor = .brown
+        hourlyForecastCollectionView.backgroundColor = .gray
         hourlyForecastCollectionView.showsHorizontalScrollIndicator = false
         hourlyForecastCollectionView.register(HourlyForecastCollectionViewCell.self, forCellWithReuseIdentifier: HourlyForecastCollectionViewCell.identifier)
         hourlyForecastCollectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -35,7 +35,7 @@ class ForecastCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .cyan
+        backgroundColor = .gray
         layer.cornerRadius = 20
         delegate()
         ForecastSetupConstraints()
@@ -58,7 +58,7 @@ class ForecastCollectionViewCell: UICollectionViewCell {
         forecastCellView.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -6).isActive = true
         forecastCellView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -6).isActive = true
         
-        forecastCellView.backgroundColor = .red
+//        forecastCellView.backgroundColor = .red
         forecastCellView.addSubview(HourlyForecastCollectionView)
         
         HourlyForecastCollectionView.topAnchor.constraint(equalTo: forecastCellView.safeAreaLayoutGuide.topAnchor, constant: 6).isActive = true
@@ -104,7 +104,7 @@ extension ForecastCollectionViewCell: UICollectionViewDataSource {
                 myCell.timeLabel.textColor = .black
             }
         }
-        myCell.backgroundColor = UIColor.blue
+//        myCell.backgroundColor = UIColor.blue
         
         return myCell
     }

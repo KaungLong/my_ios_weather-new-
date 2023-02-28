@@ -81,8 +81,9 @@ class MainPageViewController: UIPageViewController {
         print("TOUCH")
         print(pageControl.currentPage)
     }
-    
 }
+
+
 
 extension MainPageViewController:UIPageViewControllerDataSource{
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
