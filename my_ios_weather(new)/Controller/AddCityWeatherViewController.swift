@@ -20,18 +20,17 @@ class AddCityWeatherViewController: UIViewController {
     var forecastRow = [ForecastWeather.List]()
     var delegate: SaveWeatherDelegate?
     
+    //MARK: - UI
     let mainCollectionView:UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        //sticky header!!
-        layout.sectionHeadersPinToVisibleBounds = true
-
+            layout.scrollDirection = .vertical
+            layout.sectionHeadersPinToVisibleBounds = true  //滑動時固定title
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        
+        collectionView.isScrollEnabled = false
         collectionView.backgroundColor = .systemBackground
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        print("coll")
+        
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "mycell")
         collectionView.register(ForecastCollectionViewCell.self, forCellWithReuseIdentifier: ForecastCollectionViewCell.identifier)
         collectionView.register(CurrentCollectionViewCell.self, forCellWithReuseIdentifier: CurrentCollectionViewCell.identifier)
@@ -39,6 +38,7 @@ class AddCityWeatherViewController: UIViewController {
         return collectionView
     }()
     
+    //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,7 +49,7 @@ class AddCityWeatherViewController: UIViewController {
         self.view.addSubview(mainCollectionView)
         setupConstraints()
         setupDelegate()
-        
+        //加載天氣資料
         Task{
             currentWeatherData = try await WeatherDataHTTPClient.CurrentWeatherData(city:cityName)
             self.mainCollectionView.reloadSections([0])
@@ -70,7 +70,6 @@ class AddCityWeatherViewController: UIViewController {
         navigationItem.title = "Weather"
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action:#selector(cancelButton))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButton))
-
         //設定各物件顏色
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor:UIColor.white]
         navigationItem.rightBarButtonItem?.tintColor = .white
@@ -98,15 +97,11 @@ class AddCityWeatherViewController: UIViewController {
            let temp_Max = self.currentWeatherData?.main.temp_max,
            let suffix =  self.currentWeatherData?.weather.first?.icon.suffix(1)
             {
-//            DispatchQueue.main.async {
                 cell.locationLabel.text = cityName.capitalized
                 cell.tempLabel.text = "\(WeatherDataHTTPClient.tempFormate(temp))º"
                 cell.temp_MaxMin.text = "H:\(temp_Max) L:\(temp_Min)"
                 cell.destributionLabel.text = weatherDesc
                 cell.WeatherImageView.image = UIImage(named: weatherIcon)
-                print("gg+\(weatherIcon)")
-//            }
-
         }
     }
     
@@ -199,7 +194,9 @@ extension AddCityWeatherViewController: UICollectionViewDelegateFlowLayout{
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        
         guard let homeSection = HomeSection(rawValue: section) else {return CGSize.zero}
+        
         switch homeSection {
         case .Current:
             return CGSize.zero
@@ -209,12 +206,8 @@ extension AddCityWeatherViewController: UICollectionViewDelegateFlowLayout{
             return CGSize(width: self.view.frame.width/2-100 , height: 26)
         case .test2:
             return CGSize(width: self.view.frame.width/2-100 , height: 26)
-//        case .buttom:
-//            return CGSize.zero
-//        default:
-//            return CGSize(width: (frame.width-50)/2, height: 20)
         }
-//        return CGSize(width: frame.width, height: 20)
+        
     }
 }
 

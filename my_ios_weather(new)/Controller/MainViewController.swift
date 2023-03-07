@@ -11,8 +11,6 @@ class MainViewController: UIViewController {
     
     
     var countryDataClient = CountryDataHTTPClient()
-//    var countries: [Country] = []
-//    var countrys = [String]()
     var searchTableViewController = SearchTableViewController()
     
     //MARK: - UI
@@ -125,10 +123,9 @@ extension MainViewController: UITableViewDataSource{
         cell.timeLabel.text = currentWeather.dt.time(format: "HH:mm")
         cell.destributionLabel.text = currentWeather.weather[indexPath.row].description
         cell.tempLabel.text = "\(WeatherDataHTTPClient.tempFormate(currentWeather.main.temp))"
-        //String(lround(currentWeather.main.temp))
         cell.temp_MaxMin.text = "H: \(WeatherDataHTTPClient.tempFormate(currentWeather.main.temp_max))   L: \(WeatherDataHTTPClient.tempFormate(currentWeather.main.temp_min))"
         cell.layer.borderWidth = 1
-        cell.backgroundColor = .gray
+
         return cell
     }
     
@@ -173,10 +170,11 @@ extension MainViewController:UITableViewDelegate{
         }
     }
 }
+
 //MARK: - SaveWeatherDelegate
 extension MainViewController:SaveWeatherDelegate{
     func saveWeather(weatherData: CurrentWeather) {
-        print("CCCCCC")
+
         WeatherStore.shared.append(weatherData)
         DispatchQueue.main.async {
             self.mainTableView.reloadData()

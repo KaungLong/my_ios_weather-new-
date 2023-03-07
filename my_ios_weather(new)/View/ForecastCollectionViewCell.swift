@@ -51,14 +51,14 @@ class ForecastCollectionViewCell: UICollectionViewCell {
     }
     
     func ForecastSetupConstraints(){
+        
         self.addSubview(forecastCellView)
-        print("佈局forecast")
+
         forecastCellView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 6).isActive = true
         forecastCellView.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor, constant: 6).isActive = true
         forecastCellView.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -6).isActive = true
         forecastCellView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -6).isActive = true
         
-//        forecastCellView.backgroundColor = .red
         forecastCellView.addSubview(HourlyForecastCollectionView)
         
         HourlyForecastCollectionView.topAnchor.constraint(equalTo: forecastCellView.safeAreaLayoutGuide.topAnchor, constant: 6).isActive = true
@@ -104,8 +104,7 @@ extension ForecastCollectionViewCell: UICollectionViewDataSource {
                 myCell.timeLabel.textColor = .black
             }
         }
-//        myCell.backgroundColor = UIColor.blue
-        
+
         return myCell
     }
 
@@ -125,7 +124,6 @@ extension ForecastCollectionViewCell: UICollectionViewDelegate {
        print("User tapped on item \(indexPath.row)")
     }
     
-
 }
 
 extension ForecastCollectionViewCell: UICollectionViewDelegateFlowLayout{

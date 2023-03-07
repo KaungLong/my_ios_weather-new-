@@ -83,8 +83,7 @@ class MainPageViewController: UIPageViewController {
     }
 }
 
-
-
+//MARK: - PageViewControllerDataSource
 extension MainPageViewController:UIPageViewControllerDataSource{
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let currentIndex = pages.firstIndex(of: viewController) else { return nil }
@@ -111,15 +110,11 @@ extension MainPageViewController:UIPageViewControllerDataSource{
     }
 }
 
+//MARK: - PageViewControllerDelegate
 extension MainPageViewController: UIPageViewControllerDelegate {
-
-//    override func setViewControllers(_ viewControllers: [UIViewController]?, direction: UIPageViewController.NavigationDirection, animated: Bool, completion: ((Bool) -> Void)? = nil) {
-//        <#code#>
-//    }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 
-        // set the pageControl.currentPage to the index of the current viewController in pages
         if let viewControllers = pageViewController.viewControllers {
             if let viewControllerIndex = self.pages.firstIndex(of: viewControllers[0]) {
                 self.pageControl.currentPage = viewControllerIndex

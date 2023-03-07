@@ -33,7 +33,6 @@ class MainTableViewCell: UITableViewCell {
         return label
     }()
     
-    
     let tempLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 34)
@@ -45,8 +44,6 @@ class MainTableViewCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
-    
-    
     
     //MARK: - init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -72,7 +69,6 @@ class MainTableViewCell: UITableViewCell {
         self.addSubview(leftStackView)
         self.addSubview(rightStackView)
         
-        leftStackView.backgroundColor = .gray
         leftStackView.translatesAutoresizingMaskIntoConstraints = false
         leftStackView.axis = .vertical
         leftStackView.setCustomSpacing(24, after: timeLabel)
@@ -80,7 +76,6 @@ class MainTableViewCell: UITableViewCell {
         rightStackView.axis = .vertical
         rightStackView.alignment = .center
         rightStackView.spacing = 26
-        rightStackView.backgroundColor = .gray
         rightStackView.translatesAutoresizingMaskIntoConstraints = false
 
         leftStackView.topAnchor.constraint(equalTo: self.topAnchor,constant: 8).isActive = true
@@ -90,13 +85,8 @@ class MainTableViewCell: UITableViewCell {
         rightStackView.topAnchor.constraint(equalTo: self.topAnchor,constant: 8).isActive = true
         rightStackView.leftAnchor.constraint(equalTo: self.centerXAnchor,constant: 14).isActive = true
         rightStackView.rightAnchor.constraint(equalTo: self.rightAnchor,constant: -16).isActive = true
-        
-        
-        
-    
-    
+
     }
-    
     
 }
 

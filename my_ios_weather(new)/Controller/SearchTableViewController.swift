@@ -8,14 +8,12 @@
 import Foundation
 import UIKit
 
-
-
 class SearchTableViewController: UITableViewController {
 
     var countries = [String]()
     var delegate:SaveWeatherDelegate?
 
-    
+    //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -46,15 +44,7 @@ class SearchTableViewController: UITableViewController {
         vc.cityName = country
         let addWeatherNC = UINavigationController(rootViewController: vc)
         present(addWeatherNC, animated: true, completion: nil)
-//        Task{
-//            vc.currentWeatherData = try await WeatherDataHTTPClient.CurrentWeatherData(city:country)
-//            vc.forcastWeatherData = try await WeatherDataHTTPClient.ForecastWeatherData(city: country)
-//            vc.forecastRow = vc.forcastWeatherData!.list
-//            vc.mainCollectionView.reloadData()
-//
-//            let addWeatherNC = UINavigationController(rootViewController: vc)
-//            present(addWeatherNC, animated: true, completion: nil)
-//        }
+
         vc.delegate = self.delegate
         
     }

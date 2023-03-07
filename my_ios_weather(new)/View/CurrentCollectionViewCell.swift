@@ -35,7 +35,7 @@ class CurrentCollectionViewCell: UICollectionViewCell {
         let stackView = UIStackView(arrangedSubviews: [
           locationLabel, tempLabel, destributionLabel, temp_MaxMin
         ])
-//        stackView.backgroundColor = .blue
+
         stackView.setCustomSpacing(4, after: destributionLabel)
         stackView.spacing = 8
         stackView.backgroundColor = .gray
